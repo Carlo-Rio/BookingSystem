@@ -1,9 +1,11 @@
-package com.Booking.System.v1;
+package com.booking.system.v1;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 @SpringBootApplication
+
 public class V1Application {
 
 	public static void main(String[] args) {
