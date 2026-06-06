@@ -9,6 +9,7 @@ import com.booking.system.v1.exception.UserNotActiveException;
 import com.booking.system.v1.exception.UserNotFoundException;
 import com.booking.system.v1.mapper.ReservationMapper;
 import com.booking.system.v1.service.impl.ReservationServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,10 @@ import com.booking.system.v1.repository.ReservationRepository;
 import com.booking.system.v1.repository.ResourceRepository;
 import com.booking.system.v1.repository.UserRepository;
 import com.booking.system.v1.service.AuditLogService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -51,6 +56,27 @@ public class ReservationServiceImplTest {
 
     @InjectMocks
     private ReservationServiceImpl reservationService;
+
+
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(
+                reservationService,
+                "maxDurationHours",
+                8
+        );
+
+    }
+    @BeforeEach
+    void setUps() {
+        ReflectionTestUtils.setField(
+                reservationService,
+                "minDurationHours",
+                1
+        );
+
+    }
 
 
 
@@ -107,6 +133,7 @@ public class ReservationServiceImplTest {
         when(reservationMapper.toResponseDTO(any())).thenReturn(expectedResponse);
 
         // Act
+
         ReservationResponseDTO result = reservationService.reserveResource(email, dto);
 
         // Assert
@@ -242,6 +269,7 @@ public class ReservationServiceImplTest {
         smallRoom.setName("Small Room");
         smallRoom.setCapacity(6);
         smallRoom.setResourceStatus(ResourceStatus.ACTIVE);
+
 
         Resource largeRoom = new Resource();
         largeRoom.setId(2L);

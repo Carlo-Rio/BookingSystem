@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.booking.system.v1.repository.AuditLogRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -103,13 +104,18 @@ public class AuditLogServiceImplTest {
         // Arrange
         AuditLog auditLog = new AuditLog();
         Pageable pageable = PageRequest.of(0, 20);
-        Page<AuditLog> emptyPage = Page.empty(pageable);
-        auditLog.setAction(AuditAction.RESERVATION_CREATED);
-
+        Page<AuditLog> auditLogPage = new PageImpl<>(
+                List.of(auditLog),
+                pageable,
+                1);
         AuditLogResponseDTO responseDTO = new AuditLogResponseDTO();
 
+        responseDTO.setAction(AuditAction.RESERVATION_CREATED);
+
+
+
         when(auditLogRepository.findAuditLogsByAction(AuditAction.RESERVATION_CREATED, pageable))
-                .thenReturn(emptyPage);
+                .thenReturn(auditLogPage);
         when(auditLogMapper.toResponseDTO(any())).thenReturn(responseDTO);
 
         // Act
@@ -120,5 +126,25 @@ public class AuditLogServiceImplTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(1, result.getContent().size());
+        assertEquals(AuditAction.RESERVATION_CREATED,
+                result.getContent().get(0).getAction());
     }
+
+    @Test
+    void findByAction_shouldReturnEmptyPage_whenNoLogsExist() {
+
+        Pageable pageable = PageRequest.of(0, 20);
+
+        when(auditLogRepository.findAuditLogsByAction(
+                AuditAction.RESERVATION_CREATED, pageable))
+                .thenReturn(Page.empty(pageable));
+
+        Page<AuditLogResponseDTO> result =
+                auditLogService.findByAction(AuditAction.RESERVATION_CREATED, pageable);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        assertEquals(0, result.getContent().size());
+    }
+
 }

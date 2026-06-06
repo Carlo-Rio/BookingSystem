@@ -8,6 +8,7 @@ import com.booking.system.v1.mapper.ResourceMapper;
 import com.booking.system.v1.repository.UserRepository;
 import com.booking.system.v1.service.impl.ResourceServiceImpl;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,7 @@ import com.booking.system.v1.repository.ReservationRepository;
 import com.booking.system.v1.repository.ResourceRepository;
 import com.booking.system.v1.service.AuditLogService;
 import com.booking.system.v1.service.CurrentUserService;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -60,6 +62,9 @@ public class ResourceServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+
+
 
     // ─── helper methods ────────────────────────────────────────
 
@@ -187,12 +192,13 @@ public class ResourceServiceImplTest {
         dto.setResourceName("Room A");
         dto.setLocation(Location.FLOOR_1);
         dto.setCapacity(10);
+        dto.setRoomNumber(10);
 
         Resource mappedResource = buildActiveResource();
         Resource savedResource = buildActiveResource();
         ResourceResponseDTO responseDTO = buildResourceResponseDTO();
 
-        when(resourceRepository.existsByName(any())).thenReturn(false);
+        when(resourceRepository.existsByLocationAndRoomNumber(any(),any())).thenReturn(false);
         when(resourceMapper.toEntity(any())).thenReturn(mappedResource);
         when(resourceRepository.save(any())).thenReturn(savedResource);
         when(resourceMapper.toResponseDTO(any())).thenReturn(responseDTO);
@@ -211,8 +217,9 @@ public class ResourceServiceImplTest {
         // Arrange
         ResourceRequestDTO dto = new ResourceRequestDTO();
         dto.setResourceName("Room A");
+        dto.setRoomNumber(10);
 
-        when(resourceRepository.existsByName(any())).thenReturn(true);
+        when(resourceRepository.existsByLocationAndRoomNumber(any(),any())).thenReturn(true);
 
         // Act and Assert
         assertThrows(ResourceExistsException.class,

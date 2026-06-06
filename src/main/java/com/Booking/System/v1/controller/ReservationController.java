@@ -32,7 +32,7 @@ public class ReservationController {
 
 
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ReservationResponseDTO> reserveResource(
             @Valid @RequestBody AvailableResourceFilterDTO dto,
             @Parameter(hidden = true) Authentication authentication
@@ -131,25 +131,25 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
-    // PUT /api/reservations/{id}/confirm
-    // admin confirms a pending reservation
-    @PutMapping("/{id}/confirm")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> confirmReservation(@PathVariable Long id) {
-
-        reservationService.confirm(id);
-        return ResponseEntity.ok().build();
-    }
-
-    // PUT /api/reservations/{id}/cancel
-    // admin cancels any reservation
-    @PutMapping("/{id}/cancel")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> cancelReservationByAdmin(@PathVariable Long id) {
-
-        reservationService.cancel(id);
-        return ResponseEntity.noContent().build();
-    }
+//    // PUT /api/reservations/{id}/confirm
+//    // admin confirms a pending reservation
+//    @PutMapping("/{id}/confirm")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<Void> confirmReservation(@PathVariable Long id) {
+//
+//        reservationService.confirm(id);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    // PUT /api/reservations/{id}/cancel
+//    // admin cancels any reservation
+//    @PutMapping("/{id}/cancel")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<Void> cancelReservationByAdmin(@PathVariable Long id) {
+//
+//        reservationService.cancel(id);
+//        return ResponseEntity.noContent().build();
+//    }
 }
 
 

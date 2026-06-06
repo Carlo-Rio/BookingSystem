@@ -25,7 +25,7 @@ import com.booking.system.v1.service.AdminService;
 public class AdminController {
 
     private final AdminService adminService;
-    private final UserService userService;
+
     private final ResourceService resourceService;
 
     // ─── USER MANAGEMENT ───────────────────────────────────────

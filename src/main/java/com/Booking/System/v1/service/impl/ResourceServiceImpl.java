@@ -7,7 +7,6 @@ import com.booking.system.v1.dto.ResourceResponseDTO;
 import com.booking.system.v1.entity.*;
 import com.booking.system.v1.exception.*;
 import com.booking.system.v1.repository.UserRepository;
-import com.booking.system.v1.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 
 import com.booking.system.v1.mapper.ResourceMapper;
@@ -39,7 +38,7 @@ public class ResourceServiceImpl implements ResourceService {
     private final AuditLogService auditLogService;
 
     private final UserRepository userRepository;
-    private final ReservationService reservationService;
+
 
 
     @Override
@@ -214,6 +213,12 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public ResourceResponseDTO create(ResourceRequestDTO dto) {
+
+
+
+        if (dto.getRoomNumber() == null) {
+            throw new InvalidRoomNumberException("Room number is required");
+        }
 
         if (dto.getRoomNumber() < 1 ||
                 dto.getRoomNumber() > 100) {

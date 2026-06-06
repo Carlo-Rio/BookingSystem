@@ -122,56 +122,56 @@ public class ResourceController {
 
     // ─── ADMIN ENDPOINTS ───────────────────────────────────────
 
-    // POST /api/resources
-    // admin creates a new resource
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResourceResponseDTO> create(
-            @RequestBody @Valid ResourceRequestDTO dto) {
-
-        ResourceResponseDTO response = resourceService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    // PUT /api/resources/{id}
-    // admin edits an existing resource
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResourceResponseDTO> edit(
-            @PathVariable Long id,
-            @RequestBody @Valid ResourceEditDTO dto) {
-
-        ResourceResponseDTO response = resourceService.edit(id, dto);
-        return ResponseEntity.ok(response);
-    }
-
-    // DELETE /api/resources/{id}
-    // admin deletes a resource
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-
-        resourceService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    // PUT /api/resources/{id}/activate
-    // admin activates a resource
-    @PutMapping("/{id}/activate")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> activate(@PathVariable Long id) {
-
-        resourceService.activate(id);
-        return ResponseEntity.ok().build();
-    }
-
-    // PUT /api/resources/{id}/deactivate
-    // admin deactivates a resource
-    @PutMapping("/{id}/deactivate")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-
-        resourceService.deactivate(id);
-        return ResponseEntity.ok().build();
-    }
+//    // POST /api/resources
+//    // admin creates a new resource
+//    @PostMapping
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<ResourceResponseDTO> create(
+//            @RequestBody @Valid ResourceRequestDTO dto) {
+//
+//        ResourceResponseDTO response = resourceService.create(dto);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+//    }
+//
+//    // PUT /api/resources/{id}
+//    // admin edits an existing resource
+//    @PutMapping("/{id}")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<ResourceResponseDTO> edit(
+//            @PathVariable Long id,
+//            @RequestBody @Valid ResourceEditDTO dto) {
+//
+//        ResourceResponseDTO response = resourceService.edit(id, dto);
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    // DELETE /api/resources/{id}
+//    // admin deletes a resource
+//    @DeleteMapping("/{id}")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<Void> delete(@PathVariable Long id) {
+//
+//        resourceService.delete(id);
+//        return ResponseEntity.noContent().build();
+//    }
+//
+//    // PUT /api/resources/{id}/activate
+//    // admin activates a resource
+//    @PutMapping("/{id}/activate")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<Void> activate(@PathVariable Long id) {
+//
+//        resourceService.activate(id);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    // PUT /api/resources/{id}/deactivate
+//    // admin deactivates a resource
+//    @PutMapping("/{id}/deactivate")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+//
+//        resourceService.deactivate(id);
+//        return ResponseEntity.ok().build();
+//    }
 }
