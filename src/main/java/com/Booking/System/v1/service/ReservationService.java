@@ -34,7 +34,7 @@ public interface ReservationService {
     ReservationResponseDTO rescheduleReservation(Long reservationId,
                                                  RescheduleReservationDTO dto);
 
-    void cancelReservation(Long reservationId, Long userId);
+    void cancelReservation(Long reservationId, String email);
 
 
     ReservationResponseDTO findById(Long id);
