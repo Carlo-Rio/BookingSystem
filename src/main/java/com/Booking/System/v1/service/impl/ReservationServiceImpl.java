@@ -218,7 +218,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional
     @Override
-    public void cancelReservation(Long reservationId, Long userId) {
+    public void cancelReservation(Long reservationId, String email) {
 
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
@@ -230,11 +230,11 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
 
-        if (!reservation.getUser().getId().equals(userId)) {
+        if (!reservation.getUser().getId().equals(user.getId())) {
             throw new AccessDeniedException("You cannot cancel this reservation");
         }
 

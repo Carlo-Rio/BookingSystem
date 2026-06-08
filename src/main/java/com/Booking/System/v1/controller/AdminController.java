@@ -3,6 +3,7 @@ package com.booking.system.v1.controller;
 
 import com.booking.system.v1.dto.*;
 
+import com.booking.system.v1.entity.ResourceStatus;
 import com.booking.system.v1.service.ResourceService;
 import com.booking.system.v1.service.UserService;
 import jakarta.validation.Valid;
@@ -109,7 +110,7 @@ public class AdminController {
     public ResponseEntity<Page<ResourceResponseDTO>> findAllResources(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "resourceName") String sortBy,
+            @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(defaultValue = "asc") String direction) {
 
 
@@ -177,7 +178,7 @@ public class AdminController {
     public ResponseEntity<Page<ReservationResponseDTO>> findAllReservations(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "created_at") String sortBy,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "asc") String direction) {
 
     Sort sort = direction.equalsIgnoreCase("desc")
@@ -226,7 +227,7 @@ public class AdminController {
     public ResponseEntity<Page<AuditLogResponseDTO>> findAllAuditLogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "target_entity") String sortBy,
+            @RequestParam(defaultValue = "targetId") String sortBy,
             @RequestParam(defaultValue = "asc") String direction) {
 
 
