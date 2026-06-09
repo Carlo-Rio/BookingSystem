@@ -6,7 +6,7 @@ import com.booking.system.v1.entity.User;
 import com.booking.system.v1.entity.UserStatus;
 import com.booking.system.v1.exception.*;
 import lombok.RequiredArgsConstructor;
-import com.booking.system.v1.mapper.ReservationMapper;
+
 
 import com.booking.system.v1.mapper.UserMapper;
 
@@ -14,7 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.booking.system.v1.repository.ReservationRepository;
+
 
 import com.booking.system.v1.repository.UserRepository;
 import com.booking.system.v1.service.UserService;

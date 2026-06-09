@@ -8,7 +8,7 @@ import com.booking.system.v1.mapper.ResourceMapper;
 import com.booking.system.v1.repository.UserRepository;
 import com.booking.system.v1.service.impl.ResourceServiceImpl;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,12 +25,11 @@ import com.booking.system.v1.repository.ReservationRepository;
 import com.booking.system.v1.repository.ResourceRepository;
 import com.booking.system.v1.service.AuditLogService;
 import com.booking.system.v1.service.CurrentUserService;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Optional;
 

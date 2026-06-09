@@ -5,7 +5,6 @@ import com.booking.system.v1.entity.ReservationStatus;
 import com.booking.system.v1.entity.Resource;
 import com.booking.system.v1.entity.ResourceStatus;
 import jakarta.persistence.LockModeType;
-import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

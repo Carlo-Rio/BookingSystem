@@ -22,15 +22,6 @@ public class ReservationMapper {
         return reservation;
 
     }
-//    public Reservation toEntity(, User user, Resource resource)  {
-//        Reservation reservation = new Reservation();
-//        reservation.setUser(user);
-//        reservation.setResource(resource);
-//        reservation.setStartTime(dto.getStartTime());
-//        reservation.setEndTime(dto.getEndTime());
-//        reservation.setReservationStatus(ReservationStatus.CONFIRMED);
-//
-//        return reservation;
 
 
 

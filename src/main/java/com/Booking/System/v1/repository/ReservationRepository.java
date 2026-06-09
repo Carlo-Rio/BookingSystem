@@ -2,6 +2,7 @@ package com.booking.system.v1.repository;
 
 import com.booking.system.v1.entity.Reservation;
 import com.booking.system.v1.entity.ReservationStatus;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,31 +15,25 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
 
-    void findByStartTimeBetween(LocalDateTime startTime, LocalDateTime endTime);
-
-
-
     Page<Reservation> findByUser_Id(Long userId, Pageable pageable);
 
     List<Reservation> findByUser_Id(Long userId);
 
 
-
     List<Reservation> findByResource_Id(Long resourceId);
 
 
-    boolean existsByResourceIdAndStartTimeAndEndTime(Long resourceId, LocalDateTime start, LocalDateTime end);
 
-    Page<Reservation> findAll(Pageable pageable);
+    Page<Reservation> findAll(@NonNull Pageable pageable);
 
     @Query("""
-        SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END
-        FROM Reservation r
-        WHERE r.resource.id = :resourceId
-          AND r.reservationStatus = :status
-          AND r.startTime < :end
-          AND r.endTime > :start
-    """)
+                SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END
+                FROM Reservation r
+                WHERE r.resource.id = :resourceId
+                  AND r.reservationStatus = :status
+                  AND r.startTime < :end
+                  AND r.endTime > :start
+            """)
     boolean existsConflict(
             @Param("resourceId") Long resourceId,
             @Param("start") LocalDateTime start,
@@ -60,7 +55,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("pendingStatus") ReservationStatus pendingStatus);
 
 
-
     @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
             "WHERE r.resource.id = :resourceId " +
             "AND r.id != :reservationId " +
@@ -75,7 +69,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("endTime") LocalDateTime endTime,
             @Param("confirmedStatus") ReservationStatus confirmedStatus,
             @Param("pendingStatus") ReservationStatus pendingStatus);
-
 
 
 }

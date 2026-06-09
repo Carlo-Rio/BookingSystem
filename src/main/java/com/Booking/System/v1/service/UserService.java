@@ -4,11 +4,8 @@ import com.booking.system.v1.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 
-// użytkownik powinien: wyszukać resource, zarezerwować resource, reschedulować rezerwacje
-// uniknąć duplikowania funkcji np. cancelReservation; cancelReservation będzie delegowane do interfejsu ReservationService
 public interface UserService {
 
     Page<UserResponseDTO> findAll(Pageable pageable);

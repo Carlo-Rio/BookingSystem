@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuditLogMapper {
 
-    // to co tylko konieczne do exposowania
+
     public AuditLogResponseDTO toResponseDTO(AuditLog auditLog) {
         AuditLogResponseDTO dto = new AuditLogResponseDTO();
         dto.setId(auditLog.getId());

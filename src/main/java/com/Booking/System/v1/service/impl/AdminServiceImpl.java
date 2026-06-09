@@ -152,12 +152,7 @@ public class AdminServiceImpl implements AdminService {
 
 
 
-    @Override
-    public Page<ResourceResponseDTO> findAllResources(Pageable pageable) {
 
-        return resourceService.findAllResources(pageable);
-
-    }
 
     @Override
     public void activateResource(Long id) {
@@ -210,12 +205,7 @@ public class AdminServiceImpl implements AdminService {
         return auditLogService.findByAuditId(id);
     }
 
-    @Override
-    public Page<AuditLogResponseDTO> findAuditLogsByActions(AuditAction action, Pageable pageable) {
 
-        return auditLogService.findByAction(action, pageable);
-
-    }
 
 
 

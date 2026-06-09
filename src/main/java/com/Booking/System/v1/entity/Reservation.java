@@ -5,15 +5,6 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-//Na razie jest to szkic, ale myślę, że pójdziemy w system rezerwujący Sale
-
-
-//Klasa reservation posiada: id,nazwę, który użytkownik złożył requesta na resource,
-// kiedy została złożona rezerwacja, dany resource
-// Wiele userów może złożyć rezerwację
-// ale każda rezerwacja dotyczy jednego zasobu i jednego usera
-//Zrobimy jako szytwne godziny np. sala jest zajęta od 12 do 14, zamiast timera
-//Będą to sloty czasowe, w których użytkownik chce zarezerwować sale
 
 @Data
 @Entity

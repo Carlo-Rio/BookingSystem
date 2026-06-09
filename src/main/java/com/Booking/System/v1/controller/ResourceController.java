@@ -1,8 +1,7 @@
 package com.booking.system.v1.controller;
 
 import com.booking.system.v1.dto.AvailableResourceFilterDTO;
-import com.booking.system.v1.dto.ResourceEditDTO;
-import com.booking.system.v1.dto.ResourceRequestDTO;
+
 import com.booking.system.v1.dto.ResourceResponseDTO;
 import com.booking.system.v1.entity.Location;
 import jakarta.validation.Valid;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

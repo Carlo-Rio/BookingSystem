@@ -14,9 +14,7 @@ public interface AuditLogRepository extends JpaRepository<AuditLog,Long> {
 
 
 
-//    @Query("SELECT a " +
-//    "FROM AuditLog a " +
-//    "WHERE (a.action = :action)")
+
     Page<AuditLog> findAuditLogsByAction(AuditAction action, Pageable pageable);
 
 }

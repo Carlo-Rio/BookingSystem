@@ -130,8 +130,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 
 
-//
-        System.out.println("Conflict found: " + conflict);
+
 
 
         Reservation reservation = reservationMapper.toEntity(dto, user, lockedResource);

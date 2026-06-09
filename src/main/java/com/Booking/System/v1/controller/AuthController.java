@@ -1,8 +1,7 @@
 package com.booking.system.v1.controller;
 
 import com.booking.system.v1.dto.LoginRequestDTO;
-import com.booking.system.v1.repository.UserRepository;
-import com.booking.system.v1.service.impl.UserServiceImpl;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final HttpSession httpSession;
+
 
 
     @PostMapping("/login/json")

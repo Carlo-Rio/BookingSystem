@@ -1,7 +1,7 @@
 package com.booking.system.v1.service;
 
 import com.booking.system.v1.dto.*;
-import com.booking.system.v1.entity.AuditAction;
+
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,7 +53,7 @@ public interface AdminService {
 
     ResourceResponseDTO editResource(Long id, ResourceEditDTO dto);
 
-    Page<ResourceResponseDTO> findAllResources(Pageable pageable);
+
 
     void activateResource(Long id);
 
@@ -73,7 +73,7 @@ public interface AdminService {
 
     AuditLogResponseDTO findAuditLogById(Long id);
 
-    Page<AuditLogResponseDTO> findAuditLogsByActions(AuditAction action, Pageable pageable);
+
 
 
 }
