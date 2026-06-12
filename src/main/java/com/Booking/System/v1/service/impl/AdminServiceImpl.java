@@ -183,11 +183,6 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
-    @Override
-    public void confirmReservation(Long id) {
-        reservationService.confirm(id);
-
-    }
 
     @Override
     public void cancelReservation(Long id) {

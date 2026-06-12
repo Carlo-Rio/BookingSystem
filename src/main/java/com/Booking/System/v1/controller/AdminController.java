@@ -180,11 +180,11 @@ public class AdminController {
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "asc") String direction) {
 
-    Sort sort = direction.equalsIgnoreCase("desc")
-            ? Sort.by(sortBy).descending()
-            : Sort.by(sortBy).ascending();
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-    Pageable pageable = PageRequest.of(page,size,sort);
+        Pageable pageable = PageRequest.of(page,size,sort);
 
 
         return ResponseEntity.ok(adminService.findAllReservations(pageable));
@@ -200,14 +200,6 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
-    // PUT /api/admin/reservations/{id}/confirm
-    @PutMapping("/reservations/{id}/confirm")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> confirmReservation(@PathVariable Long id) {
-
-        adminService.confirmReservation(id);
-        return ResponseEntity.ok().build();
-    }
 
     // PUT /api/admin/reservations/{id}/cancel
     @PutMapping("/reservations/{id}/cancel")

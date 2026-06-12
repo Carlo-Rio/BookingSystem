@@ -8,6 +8,7 @@ import com.booking.system.v1.exception.TimeException;
 import com.booking.system.v1.exception.UserNotActiveException;
 import com.booking.system.v1.exception.UserNotFoundException;
 import com.booking.system.v1.mapper.ReservationMapper;
+import com.booking.system.v1.service.EmailService;
 import com.booking.system.v1.service.impl.ReservationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,6 +51,9 @@ public class ReservationServiceImplTest {
 
     @Mock
     private AuditLogService auditLogService;
+
+    @Mock
+    private EmailService emailService;
 
     @InjectMocks
     private ReservationServiceImpl reservationService;
@@ -138,6 +142,7 @@ public class ReservationServiceImplTest {
         assertEquals("Room A", result.getResourceName());
         verify(reservationRepository).save(any());
         verify(auditLogService).log(any(), any(), any(), any(), any());
+        verify(emailService).sendReservationConfirmation(any());
     }
 
     @Test
@@ -211,6 +216,7 @@ public class ReservationServiceImplTest {
         verify(resourceRepository, never()).findAvailableResourcesByFilters(
                 any(), any(), any(), any(), any(), any(), any());
         verify(reservationRepository, never()).save(any());
+        verify(emailService, never()).sendReservationConfirmation(any());
     }
 
     @Test
@@ -289,7 +295,7 @@ public class ReservationServiceImplTest {
                 .thenReturn(Optional.of(smallRoom));
 
         when(reservationRepository.existsOverlappingReservation(
-                any(), any(), any(), any(), any()))
+                any(), any(), any(), any()))
                 .thenReturn(false);
         when(reservationMapper.toEntity(any(), any(), any())).thenReturn(savedReservation);
         when(reservationRepository.save(any())).thenReturn(savedReservation);

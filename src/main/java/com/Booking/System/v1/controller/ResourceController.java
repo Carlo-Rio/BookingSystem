@@ -36,13 +36,13 @@ public class ResourceController {
             @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(defaultValue = "asc") String direction) {
 
-       Sort sort = direction.equalsIgnoreCase("desc")
-               ? Sort.by(sortBy).descending()
-               : Sort.by(sortBy).ascending();
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
 
-       Pageable pageable = PageRequest.of(page,size,sort);
-       return ResponseEntity.ok(resourceService.findAllActive(pageable));
+        Pageable pageable = PageRequest.of(page,size,sort);
+        return ResponseEntity.ok(resourceService.findAllActive(pageable));
     }
 
 

@@ -52,6 +52,9 @@ public class User {
     private LocalDateTime createdAt;
 
 
+    @Column(name = "current_token")
+    private String currentToken;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
