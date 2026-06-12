@@ -1,10 +1,12 @@
 package com.booking.system.v1.configuration;
 
+import com.booking.system.v1.repository.UserRepository;
 import com.booking.system.v1.service.impl.CustomUserDetailsService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -14,9 +16,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 
 
@@ -27,7 +33,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
-    private final SessionRegistry sessionRegistry;
+    private final JwtAuthenticationFilter jwtAuthFilter;
 
 
     @Bean
@@ -46,75 +52,48 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/**",
-                                "/login",
                                 "/api/auth/login",
-                                "/api/auth/login/json",
                                 "/api/users/register",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
-                                "/v3/api-docs",
-                                "/webjars/**"
+                                "/login"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/resources/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/resources").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/resources/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/resources/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/api/auth/login")
-                        .usernameParameter("email")
-                        .passwordParameter("password")
-                        .successHandler((request, response, authentication) -> {
-                            response.setStatus(HttpStatus.OK.value());
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"message\": \"Login successful\"}");
-                        })
-                        .failureHandler((request, response, exception) -> {
+//
 
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                )
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, e) -> {
                             response.setStatus(HttpStatus.UNAUTHORIZED.value());
                             response.setContentType("application/json");
-
-                            if (exception instanceof SessionAuthenticationException) {
-                                response.getWriter().write(
-                                        "{\"message\":\"You are already logged in. Please log out first.\"}"
-                                );
-                                return;
-                            }
-
                             response.getWriter().write(
-                                    "{\"message\":\"Invalid email or password\"}"
-                            );
+                                    "{\"message\": \"Unauthorized: please log in\"}");
                         })
-                        .permitAll()
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(true)
-                        .sessionRegistry(sessionRegistry)
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/api/auth/logout")
-                        .addLogoutHandler((request, response, authentication) -> {
-                            HttpSession session = request.getSession(false);
-                            if (session != null) {
-                                System.out.println("========== LOGOUT ==========");
-                                System.out.println("Removing session: " + session.getId());
-                                sessionRegistry.removeSessionInformation(session.getId());
-                            }
-                        })
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .clearAuthentication(true)
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(HttpStatus.OK.value());
+                        .accessDeniedHandler((request, response, e) -> {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
                             response.setContentType("application/json");
-                            response.getWriter().write("{\"message\": \"Logout successful\"}");
+                            response.getWriter().write(
+                                    "{\"message\": \"Forbidden: insufficient permissions\"}");
                         })
-                        .permitAll()
+
                 )
                 .userDetailsService(customUserDetailsService);
 
