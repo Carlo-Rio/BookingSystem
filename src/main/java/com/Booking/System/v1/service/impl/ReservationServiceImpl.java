@@ -5,6 +5,7 @@ import com.booking.system.v1.dto.RescheduleReservationDTO;
 import com.booking.system.v1.dto.ReservationResponseDTO;
 import com.booking.system.v1.entity.*;
 import com.booking.system.v1.exception.*;
+import com.booking.system.v1.service.EmailService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.booking.system.v1.mapper.ReservationMapper;
@@ -33,6 +34,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ResourceRepository resourceRepository;
     private final UserRepository userRepository;
     private final AuditLogService auditLogService;
+    private final EmailService emailService;
 
     @Value("${booking.reservation.max-duration-hours}")
     private int maxDurationHours;
@@ -108,18 +110,15 @@ public class ReservationServiceImpl implements ReservationService {
                 .orElseThrow(() -> new NoRoomsAvailableException("No rooms available"));
 
 
-
         Resource lockedResource = resourceRepository.findByIdWithLock(resource.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
-
 
 
         boolean conflict = reservationRepository.existsOverlappingReservation(
                 lockedResource.getId(),
                 dto.getStartTime(),
                 dto.getEndTime(),
-                ReservationStatus.CONFIRMED,
-                ReservationStatus.PENDING
+                ReservationStatus.CONFIRMED
         );
 
         if (conflict) {
@@ -129,13 +128,11 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
 
-
-
-
-
         Reservation reservation = reservationMapper.toEntity(dto, user, lockedResource);
 
         Reservation saved = reservationRepository.save(reservation);
+
+        emailService.sendReservationConfirmation(saved);
 
         auditLogService.log(
                 AuditAction.RESERVATION_CREATED,
@@ -153,7 +150,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationResponseDTO rescheduleReservation(Long reservationId, RescheduleReservationDTO dto) {
 
 
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()-> new ReservationNotFoundException("Reservation not found"));
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
 
 
         if (reservation.getReservationStatus() != ReservationStatus.CONFIRMED &&
@@ -275,25 +272,7 @@ public class ReservationServiceImpl implements ReservationService {
         return reservations.map(reservationMapper::toResponseDTO);
     }
 
-    @Override
-    public void confirm(Long id) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
 
-        if (reservation.getReservationStatus() == ReservationStatus.CONFIRMED) {
-            throw new ReservationConfirmedException("Reservation is already confirmed");
-        }
-
-            reservation.setReservationStatus(ReservationStatus.CONFIRMED);
-
-        reservationRepository.save(reservation);
-        auditLogService.log(
-                AuditAction.RESERVATION_CONFIRMED,
-                "ADMIN",
-                "Reservation",
-                id,
-                "Reservation confirmed by admin"
-        );
-    }
 
     @Override
     public void cancel(Long id) {
@@ -301,10 +280,14 @@ public class ReservationServiceImpl implements ReservationService {
         if (reservation.getReservationStatus() == ReservationStatus.CANCELLED) {
             throw new ReservationCancelledException("Reservation is already cancelled");
         }
+
+
         reservation.setReservationStatus(ReservationStatus.CANCELLED);
-
-
         reservationRepository.save(reservation);
+
+
+        emailService.sendReservationCancellation(reservation);
+
         auditLogService.log(
                 AuditAction.RESERVATION_CANCELLED,
                 "ADMIN",

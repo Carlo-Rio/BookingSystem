@@ -87,19 +87,14 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{reservationId}/cancel")
+    @DeleteMapping("/{reservationId}/cancel")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Void> cancelReservation(
             @PathVariable Long reservationId,
-            @RequestParam String email,
-            @Parameter(hidden = true) Authentication authentication
-    ) {
+            @Parameter(hidden = true) Authentication authentication) {
 
-
-        reservationService.cancelReservation(
-                reservationId,
-                email
-        );
-
+        String email = authentication.getName();
+        reservationService.cancelReservation(reservationId, email);
         return ResponseEntity.noContent().build();
     }
 

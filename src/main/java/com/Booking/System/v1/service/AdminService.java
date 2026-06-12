@@ -65,8 +65,6 @@ public interface AdminService {
 
     ReservationResponseDTO findReservationById(Long id);
 
-    void confirmReservation(Long id);
-
     void cancelReservation(Long id);
 
     Page<AuditLogResponseDTO> findAllAuditLogs(Pageable pageable);

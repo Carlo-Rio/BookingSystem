@@ -44,7 +44,6 @@ public interface ReservationService {
 
     Page<ReservationResponseDTO> findByUserId(Long userId, Pageable pageable);
 
-    void confirm(Long id);
     void cancel(Long id);
 
 

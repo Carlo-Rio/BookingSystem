@@ -11,18 +11,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReservationMapper {
 
-    public Reservation toEntity(AvailableResourceFilterDTO dto, User user, Resource resource)  {
+    public Reservation toEntity(AvailableResourceFilterDTO dto, User user, Resource resource) {
         Reservation reservation = new Reservation();
         reservation.setUser(user);
         reservation.setResource(resource);
         reservation.setStartTime(dto.getStartTime());
         reservation.setEndTime(dto.getEndTime());
-        reservation.setReservationStatus(ReservationStatus.PENDING);
+        reservation.setReservationStatus(ReservationStatus.CONFIRMED);
 
         return reservation;
 
     }
-
 
 
     public ReservationResponseDTO toResponseDTO(Reservation reservation) {
@@ -31,6 +30,9 @@ public class ReservationMapper {
         dto.setUsername(reservation.getUser().getUsername());
         dto.setResourceName(reservation.getResource().getName());
         dto.setLocation(reservation.getResource().getLocation());
+        dto.setRoomNumber(reservation.getResource().getRoomNumber() != null
+                ? String.valueOf(reservation.getResource().getRoomNumber())
+                : "Not assigned");
         dto.setStartTime(reservation.getStartTime());
         dto.setEndTime(reservation.getEndTime());
         dto.setReservationId(reservation.getId());

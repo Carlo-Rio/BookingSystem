@@ -51,6 +51,9 @@ public class User {
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
+    @Column(name = "current_token")
+    private String currentToken;
+
 
     @PrePersist
     protected void onCreate() {

@@ -185,7 +185,7 @@ public class ResourceServiceImpl implements ResourceService {
             throw new DTONullException("DTO cannot be null");
         }
 
-        if (dto.getStartTime().isBefore(dto.getEndTime())) {
+        if (!dto.getStartTime().isBefore(dto.getEndTime())) {
             throw new TimeException("Start time must be before end time");
         }
         if (!dto.getStartTime().isAfter(LocalDateTime.now())) {

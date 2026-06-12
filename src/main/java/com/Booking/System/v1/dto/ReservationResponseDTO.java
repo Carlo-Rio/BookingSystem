@@ -15,6 +15,8 @@ public class ReservationResponseDTO {
 
     private String resourceName;
 
+    private String roomNumber;
+
     private Location location;
 
     private LocalDateTime startTime;

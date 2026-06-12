@@ -23,7 +23,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByResource_Id(Long resourceId);
 
 
-
     Page<Reservation> findAll(@NonNull Pageable pageable);
 
     @Query("""
@@ -51,8 +50,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("resourceId") Long resourceId,
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime,
-            @Param("confirmedStatus") ReservationStatus confirmedStatus,
-            @Param("pendingStatus") ReservationStatus pendingStatus);
+            @Param("confirmedStatus") ReservationStatus confirmedStatus);
 
 
     @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
@@ -69,6 +67,16 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("endTime") LocalDateTime endTime,
             @Param("confirmedStatus") ReservationStatus confirmedStatus,
             @Param("pendingStatus") ReservationStatus pendingStatus);
+
+
+    @Query("SELECT r FROM Reservation r " +
+            "WHERE r.reservationStatus = 'CONFIRMED'" +
+            "AND r.startTime > :now " +
+            "AND r.startTime <= :reminderTime " +
+            "AND r.reminderSent = false")
+    List<Reservation> findUpcomingReservations(
+            @Param("now") LocalDateTime now,
+            @Param("reminderTime") LocalDateTime reminderTime);
 
 
 }

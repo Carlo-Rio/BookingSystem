@@ -54,5 +54,8 @@ public class Reservation {
 
     }
 
+    @Column(name = "reminder_sent")
+    private boolean reminderSent = false;
+
 
 }

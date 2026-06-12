@@ -200,14 +200,6 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
-    // PUT /api/admin/reservations/{id}/confirm
-    @PutMapping("/reservations/{id}/confirm")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> confirmReservation(@PathVariable Long id) {
-
-        adminService.confirmReservation(id);
-        return ResponseEntity.ok().build();
-    }
 
     // PUT /api/admin/reservations/{id}/cancel
     @PutMapping("/reservations/{id}/cancel")
