@@ -8,7 +8,7 @@ import com.booking.system.v1.entity.User;
 import com.booking.system.v1.exception.UserNotFoundException;
 import com.booking.system.v1.repository.UserRepository;
 import com.booking.system.v1.service.impl.CustomUserDetailsService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/auth")
