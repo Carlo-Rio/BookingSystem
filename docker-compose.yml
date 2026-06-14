@@ -1,4 +1,4 @@
-
+version: '3.8'
 
 services:
 
@@ -27,11 +27,19 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/booking_system
-      SPRING_DATASOURCE_USERNAME: springstudent
-      SPRING_DATASOURCE_PASSWORD: springstudent
+      # Database — points to mysql container
+      DB_URL: jdbc:mysql://mysql:3306/booking_system
+      DB_USERNAME: springstudent
+      DB_PASSWORD: springstudent
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_SHOW_SQL: false
+
+      # JWT — replace with your own secret
+      JWT_SECRET: ${JWT_SECRET:-changeThisToASecureRandomStringInProduction}
+
+      # Mail — replace with your own credentials
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+
     depends_on:
       mysql:
         condition: service_healthy
