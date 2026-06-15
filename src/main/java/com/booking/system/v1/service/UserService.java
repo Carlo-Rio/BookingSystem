@@ -20,11 +20,11 @@ public interface UserService {
     UserResponseDTO findByUsername(String username);
 
 
-    UserResponseDTO editProfile(Long id, UserUpdateDTO dto, String loggedInEmail);
+    UserResponseDTO editProfile(String loggedInEmail, UserUpdateDTO dto);
 
-    void changePassword(Long id, ChangePasswordDTO dto);
+    void changePassword(String loggedInEmail, ChangePasswordDTO dto);
 
-    void deleteAccount(Long id, String email);
+    void deleteAccount(String email);
 
 
 

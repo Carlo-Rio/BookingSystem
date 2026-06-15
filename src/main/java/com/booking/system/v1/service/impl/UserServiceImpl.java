@@ -81,30 +81,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO editProfile(Long id, UserUpdateDTO dto, String loggedInEmail) {
-        User loggedInUser = userRepository.findByEmail(loggedInEmail)
+    public UserResponseDTO editProfile(String email, UserUpdateDTO dto) {
+
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        if (loggedInUser.getRole() != Role.ADMIN &&
-                !loggedInUser.getId().equals(id)) {
-            throw new AccessDeniedException("You can only edit your own profile");
-        }
-
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-        user.setUsername(dto.getUsername());
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
+        if (dto.getUsername() != null) user.setUsername(dto.getUsername());
+        if (dto.getFirstName() != null) user.setFirstName(dto.getFirstName());
+        if (dto.getLastName() != null) user.setLastName(dto.getLastName());
 
         User saved = userRepository.save(user);
         return userMapper.toResponseDTO(saved);
     }
 
     @Override
-    public void changePassword(Long id, ChangePasswordDTO dto) {
+    public void changePassword(String email, ChangePasswordDTO dto) {
 
-        User user = userRepository.findById(id)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // checks if user types correctly his password, then it will allow him to change password
@@ -120,20 +113,19 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
 
-        System.out.println("Password changed!");
 
     }
 
     @Override
-    public void deleteAccount(Long id, String loggedInEmail) {
-        User user = userRepository.findById(id)
+    public void deleteAccount(String loggedInEmail) {
+        User user = userRepository.findByEmail(loggedInEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         User loggedInUser = userRepository.findByEmail(loggedInEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // users can only delete their own account
-        if (!loggedInUser.getId().equals(id)) {
+        if (!loggedInUser.getEmail().equals(loggedInEmail)) {
             throw new AccessDeniedException("You can only delete your own account");
         }
 
