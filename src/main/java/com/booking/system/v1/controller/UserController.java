@@ -36,14 +36,12 @@ public class UserController {
 
     // GET /api/users/{id}
     // user views their own profile
-    @GetMapping("/{id}")
+    @GetMapping("/me")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<UserResponseDTO> findById(
-            @PathVariable Long id,
+    public ResponseEntity<UserResponseDTO> getMyProfile(
             @Parameter(hidden = true)Authentication authentication) {
-
         String loggedInEmail = authentication.getName();
-        UserResponseDTO response = userService.findById(id, loggedInEmail);
+        UserResponseDTO response = userService.findByEmail(loggedInEmail);
         return ResponseEntity.ok(response);
     }
 
@@ -52,42 +50,42 @@ public class UserController {
 
     // PUT /api/users/{id}/profile
     // user edits their own profile
-    @PutMapping("/{id}/profile")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<UserResponseDTO> editProfile(
-            @PathVariable Long id,
+    @PutMapping("/me/profile")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<UserResponseDTO> editMyProfile(
             @RequestBody @Valid UserUpdateDTO dto,
             @Parameter(hidden = true)Authentication authentication) {
 
-        UserResponseDTO response = userService.editProfile(id, dto,  authentication.getName() );
+        String email = authentication.getName();
+        UserResponseDTO response = userService.editProfile(email, dto );
         return ResponseEntity.ok(response);
     }
 
     // PUT /api/users/{id}/password
     // user changes their own password
-    @PutMapping("/{id}/password")
-    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/me/password")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Void> changePassword(
-            @PathVariable Long id,
-            @RequestBody @Valid ChangePasswordDTO dto) {
+            @RequestBody @Valid ChangePasswordDTO dto,
+            @Parameter(hidden = true) Authentication authentication) {
 
-        userService.changePassword(id, dto);
+        String email = authentication.getName();
+        userService.changePassword(email, dto);
         return ResponseEntity.ok().build();
     }
 
     // DELETE /api/users/{id}
     // user deletes their own account
     // should mark it as deleted, but admin should hard delete and user should softly delete it
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/me")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Void> deleteAccount(
-            @PathVariable Long id,
-            @Parameter(hidden = true)Authentication authentication,
-            HttpServletRequest request) {
+            @Parameter(hidden = true) Authentication authentication,
+            @Parameter(hidden = true) HttpServletRequest request) {
 
         // verify user is deleting their own account
         String loggedInEmail = authentication.getName();
-        userService.deleteAccount(id, loggedInEmail);
+        userService.deleteAccount(loggedInEmail);
 
         // invalidate session immediately after deletion
         HttpSession session = request.getSession(false);
